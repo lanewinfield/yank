@@ -1,0 +1,9 @@
+.DS_Store
+firmware/build/
+settings.json
+*.xcuserdata
+DerivedData/
+.netlify/
+macos-app/Local.xcconfig
+/CLAUDE.md
+ignore/

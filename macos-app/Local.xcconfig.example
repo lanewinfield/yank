@@ -1,0 +1,6 @@
+// Local build settings — copy this file to Local.xcconfig and fill in your values.
+// Local.xcconfig is gitignored and won't be committed.
+
+DEVELOPMENT_TEAM = YOUR_TEAM_ID_HERE
+CODE_SIGN_IDENTITY = Apple Development
+CODE_SIGN_STYLE = Automatic

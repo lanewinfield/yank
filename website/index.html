@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yank!</title>
+    <meta name="description" content="The purposeful way to use your computer. End video calls, play music, mute your mic, and more with a Yank!">
+    <meta property="og:title" content="Yank!">
+    <meta property="og:description" content="The purposeful way to use your computer. End video calls, play music, mute your mic, and more with a Yank!">
+    <meta property="og:image" content="https://yank-site.netlify.app/assets/images/shareimage.webp">
+    <meta property="og:url" content="https://yank-site.netlify.app">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Yank!">
+    <meta name="twitter:description" content="The purposeful way to use your computer. End video calls, play music, mute your mic, and more with one quick Yank!">
+    <meta name="twitter:image" content="https://yank-site.netlify.app/assets/images/shareimage.webp">
+    <link rel="icon" href="favicon.ico" sizes="48x48">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/icons/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/icons/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/images/icons/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="assets/images/icons/android-chrome-512x512.png">
+    <link rel="stylesheet" href="https://use.typekit.net/biu5blc.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Centered layout for both desktop and mobile */
+        body {
+            overflow: auto;
+        }
+
+        #desktop-layer {
+            filter: none;
+        }
+
+        .mobile-logo {
+            display: block;
+            position: fixed;
+            top: 30px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            z-index: 200;
+            margin: 0;
+            will-change: transform;
+        }
+
+        .mobile-logo img {
+            height: 12vh;
+            width: auto;
+            display: inline-block;
+        }
+
+        .hero-spacer {
+            display: flex;
+            height: 100dvh;
+            pointer-events: none;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 30px;
+            position: relative;
+            z-index: 150;
+        }
+
+        .hero-spacer .tagline {
+            position: static;
+            text-align: center;
+            font-weight: 700;
+            font-size: 8vh;
+            line-height: 1.1em;
+            color: #fff;
+            pointer-events: auto;
+            margin: 0;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
+            text-wrap: balance;
+        }
+
+        .content {
+            position: relative;
+            top: auto;
+            height: auto;
+            padding: 30px;
+            padding-bottom: 60px;
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .content .logo,
+        .content .tagline:first-of-type {
+            display: none;
+        }
+
+        .content .description,
+        .content .specs-list {
+            text-align: center;
+        }
+
+        .content .specs-list li {
+            text-align: left;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .content .features-list {
+            max-width: 100%;
+        }
+
+        /* Mobile-specific overrides */
+        @media (max-width: 768px) {
+            body {
+                font-size: 24pt;
+            }
+
+            .mobile-logo img {
+                max-width: 200px;
+            }
+
+            .hero-spacer .tagline {
+                font-size: 8.8vw;
+            }
+
+            .content {
+                max-width: 100%;
+            }
+        }
+
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        #canvas-container canvas {
+            pointer-events: auto;
+        }
+
+        .scroll-caret {
+            display: flex;
+            justify-content: center;
+            opacity: 0;
+            margin-top: 25px;
+            transition: opacity 0.8s ease;
+            pointer-events: none;
+        }
+
+        .scroll-caret::before,
+        .scroll-caret::after {
+            content: '';
+            width: 20px;
+            height: 2px;
+            background: #fff;
+        }
+
+        .scroll-caret::before {
+            transform-origin: right center;
+            transform: rotate(30deg);
+        }
+
+        .scroll-caret::after {
+            transform-origin: left center;
+            transform: rotate(-30deg);
+        }
+
+        .scroll-caret.visible {
+            opacity: 1;
+            animation: pulse 2s ease-in-out infinite;
+            pointer-events: auto;
+            cursor: pointer;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Desktop layer - NOT blurred initially -->
+    <div id="desktop-layer">
+        <div id="wallpaper-bg"></div>
+        <div id="wallpaper-overlay"></div>
+        <div id="windows-container"></div>
+    </div>
+
+    <!-- Fixed logo at top -->
+    <h1 class="mobile-logo"><img src="assets/images/yanklogo.svg" alt="Yank!"></h1>
+
+    <!-- Hero spacer with tagline at bottom (scrolls naturally) -->
+    <div class="hero-spacer">
+        <p class="tagline">The <span class="highlight">purposeful</span> way<br>to use your computer</p>
+        <div class="scroll-caret"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <h1 class="logo"><img src="assets/images/yanklogo.svg" alt="Yank!"></h1>
+        <p class="tagline">The <span class="highlight">purposeful</span> way to use your computer</p>
+
+        <p class="description">
+            Mice and keyboards are outdated, uninteresting, and too complicated.<br><br>With a quick <span class="yank">Yank!</span>, your computer can:
+        </p>
+
+        <ul class="features-list">
+            <li><img src="assets/images/icons/video-slash.svg" alt=""><span>Immediately end video calls</span></li>
+            <li><img src="assets/images/icons/playpause.svg" alt=""><span>Play and pause your music</span></li>
+            <li><img src="assets/images/icons/mic-slash.svg" alt=""><span>Mute and unmute your mic</span></li>
+            <li><img src="assets/images/icons/speaker.svg" alt=""><span>Play sounds</span></li>
+            <li><img src="assets/images/icons/keyboard.svg" alt=""><span>Hit a hotkey</span></li>
+            <li><img src="assets/images/icons/brain.svg" alt=""><span>...do anything you can script</span></li>
+        </ul>
+
+        <h2>Features</h2>
+        <ul class="specs-list">
+            <li>Wireless <span class="yank">Yank!</span> device</li>
+            <li>1 meter long chain</li>
+            <li>Compatible with macOS with the <span class="yank">Yank!</span> Companion App (<a href="https://github.com/lanewinfield/yank/releases/">download here</a>)</li>
+            <li>Chargeable via USB</li>
+            <li>1 month battery life</li>
+            <li>Mountable on ceiling, wall, or shelf (with clamp)</li>
+            <li>Loss of dignity</li>
+        </ul>
+
+        <div class="button-row">
+            <button class="buy-button" onclick="document.getElementById('email-modal').classList.add('visible')">Get a Yank!</button>
+            <a href="https://github.com/lanewinfield/yank" class="repo-button" target="_blank">Make Your Own</a>
+        </div>
+
+        <p class="made-by">Made by <a href="https://brianmoore.com">Brian</a></p>
+
+        <div id="email-modal" class="email-modal" onclick="if(event.target===this)this.classList.remove('visible')">
+            <div class="email-modal-box">
+                <button class="email-modal-close" onclick="document.getElementById('email-modal').classList.remove('visible')">&times;</button>
+                <p class="email-modal-text">I'm gauging interest in selling Yank!&mdash; if you're interested in Yank! (and other projects by me), gimme your email.<br><br>I'll only send you these things, promise.</p>
+                <div id="email-form-container">
+                    <form id="email-form" class="email-form" onsubmit="return submitEmail(event)">
+                        <div class="email-input-row">
+                            <input type="email" name="email" id="email" placeholder="yankist@ymail.com" required />
+                            <button type="submit" class="email-submit"><span class="email-submit-arrow">&#x2192;</span></button>
+                        </div>
+                        <div style="display:none;">
+                            <input type="text" name="hp" id="hp"/>
+                        </div>
+                        <input type="hidden" name="list" value="tOJHwwEy81x9VVkRspiW9g"/>
+                        <input type="hidden" name="subform" value="yes"/>
+                        <input type="hidden" name="name" value=""/>
+                    </form>
+                </div>
+                <p id="email-success" class="email-success" style="display:none;">&#x2713; You'll be notified!</p>
+                <p id="email-error" class="email-error" style="display:none;">&#x2717; Please refresh and try again.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="canvas-container"></div>
+
+    <script>
+    function submitEmail(e) {
+        e.preventDefault();
+        var form = document.getElementById('email-form');
+        var data = new FormData(form);
+        fetch('https://sendy.brianmoore.com/subscribe', {
+            method: 'POST',
+            body: data,
+            mode: 'no-cors'
+        }).then(function() {
+            document.getElementById('email-form-container').style.display = 'none';
+            document.getElementById('email-success').style.display = 'block';
+        }).catch(function() {
+            document.getElementById('email-form-container').style.display = 'none';
+            document.getElementById('email-error').style.display = 'block';
+        });
+        return false;
+    }
+    </script>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

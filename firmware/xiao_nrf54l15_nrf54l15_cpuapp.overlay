@@ -1,0 +1,17 @@
+/ {
+	yank_switch: yank-switch {
+		compatible = "gpio-keys";
+		yank_pull: yank-pull {
+			gpios = <&gpio1 7 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+			label = "Yank Pull Switch";
+		};
+	};
+
+	zephyr,user {
+		io-channels = <&adc 7>;
+	};
+
+	aliases {
+		yank-switch = &yank_pull;
+	};
+};

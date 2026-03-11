@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleName</key>
+    <string>Yank! Companion App</string>
+    <key>CFBundleDisplayName</key>
+    <string>Yank! Companion App</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.yank.companion</string>
+    <key>CFBundleVersion</key>
+    <string>1</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleExecutable</key>
+    <string>Yank Companion</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>13.0</string>
+    <key>LSUIElement</key>
+    <true/>
+    <key>NSBluetoothAlwaysUsageDescription</key>
+    <string>Yank! Companion needs Bluetooth to connect to your Yank! pull switch device.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Yank! Companion needs microphone access to toggle mute.</string>
+    <key>NSAppleEventsUsageDescription</key>
+    <string>Yank! Companion needs Automation access to end video calls in other apps.</string>
+</dict>
+</plist>
