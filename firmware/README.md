@@ -148,6 +148,80 @@ west flash --build-dir build
 nrfjprog --program build/merged.hex --sectorerase --verify --reset
 ```
 
+## Full Device Reset (Mass Erase)
+
+If the device gets into a bad state (e.g. `bt_enable()` hangs and BLE never starts), a mass erase via the CTRL-AP will wipe all flash and RRAM and fully reset the SoC — the closest thing to a power cycle without removing the battery.
+
+```bash
+openocd \
+  -f ~/ncs/zephyr/boards/seeed/xiao_nrf54l15/support/openocd.cfg \
+  -c "init; nrf54l_mass_erase; shutdown"
+```
+
+After the erase, reflash the firmware:
+
+```bash
+west flash -d /path/to/firmware/build/firmware
+```
+
+## Debugging (RTT Console)
+
+The XIAO nRF54L15's USB port is a CMSIS-DAP debug probe only — UART is not routed through USB. To view console output, use Segger RTT (Real-Time Transfer) which reads directly through the debug probe.
+
+### 1. Enable RTT in `prj.conf`
+
+Change the serial/console section to:
+
+```
+CONFIG_SERIAL=n
+CONFIG_CONSOLE=y
+CONFIG_UART_CONSOLE=n
+CONFIG_USE_SEGGER_RTT=y
+CONFIG_RTT_CONSOLE=y
+```
+
+### 2. Rebuild and flash
+
+```bash
+cd ~/ncs
+west build -b xiao_nrf54l15/nrf54l15/cpuapp /path/to/firmware --build-dir /path/to/firmware/build --pristine
+west flash -d /path/to/firmware/build/firmware
+```
+
+Note: `west flash` needs the `build/firmware` subdirectory (not just `build`) due to the sysbuild structure.
+
+### 3. Read RTT output via OpenOCD
+
+```bash
+# Start OpenOCD with RTT server
+openocd \
+  -f /path/to/ncs/zephyr/boards/seeed/xiao_nrf54l15/support/openocd.cfg \
+  -c "init; rtt setup 0x20000000 0x10000 \"SEGGER RTT\"; rtt start; rtt server start 9090 0"
+
+# In another terminal, connect to the RTT stream
+nc localhost 9090
+```
+
+To reset the device while reading RTT, connect to the OpenOCD telnet interface and issue a reset:
+
+```bash
+# In a third terminal
+nc localhost 4444
+> reset run
+```
+
+### 4. Revert to production mode
+
+Change `prj.conf` back to disable serial/RTT for battery savings (~1-2mA):
+
+```
+CONFIG_SERIAL=n
+CONFIG_CONSOLE=n
+CONFIG_UART_CONSOLE=n
+```
+
+Rebuild and flash again.
+
 ## Behavior
 
 ### Normal Operation

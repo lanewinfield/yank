@@ -321,7 +321,15 @@ static void init_adc(void)
 
 int main(void)
 {
-	printk("=== Yank! starting ===\n");
+	/* Brief delay to let HFXO stabilize before radio init.
+	 * Some nRF54L15 units need this when UART/console is disabled
+	 * (the UART init normally provides enough startup time). */
+	k_msleep(100);
+
+	int err = bt_enable(NULL);
+	if (err) {
+		return err;
+	}
 
 	/* LED */
 	if (gpio_is_ready_dt(&led)) {
@@ -345,16 +353,8 @@ int main(void)
 	init_adc();
 	k_work_init_delayable(&battery_work, battery_work_handler);
 
-	/* Bluetooth */
-	int err = bt_enable(NULL);
-	if (err) {
-		printk("BT init failed (%d)\n", err);
-		return err;
-	}
-
 	start_advertising();
 	k_work_schedule(&battery_work, K_SECONDS(5));
 
-	printk("=== Yank! ready ===\n");
 	return 0;
 }
