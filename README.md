@@ -2,6 +2,12 @@
 
 ***Yank!*** is a purposeful way to use your computer.
 
+[![Watch video](thumbnail.webp)](https://www.instagram.com/p/DV84M5tjh6s/)
+
+**[Watch video](https://www.instagram.com/p/DV84M5tjh6s/)**
+
+*Disclosure: this video was in partnership with Anthropic.*
+
 ## What it does
 
 ***Yank!*** is a physical pull switch that connects to your Mac over BLE and triggers configurable actions — play a sound, mute your mic, end a video call, run a script, whatever you want. One pull, instant reaction. More at [yank.computer](https://yank.computer).
@@ -91,3 +97,5 @@ The built app lands in `~/Library/Developer/Xcode/DerivedData/YankCompanion-*/Bu
 ---
 
 Made by [Brian Moore](https://brianmoore.com) (w/ plenty of assist from [Claude](https://claude.ai))
+
+*Disclosure: the [video](https://www.instagram.com/p/DV84M5tjh6s/) featured in this README was made in partnership with Anthropic.*
