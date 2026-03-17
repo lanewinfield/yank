@@ -2,7 +2,7 @@
 
 ***Yank!*** is a purposeful way to use your computer.
 
-[![Watch video](thumbnail.webp)](https://www.instagram.com/p/DV84M5tjh6s/)
+<a href="https://www.instagram.com/p/DV84M5tjh6s/"><img src="thumbnail.webp" alt="Watch video" width="35%"></a>
 
 **[Watch video](https://www.instagram.com/p/DV84M5tjh6s/)**
 
